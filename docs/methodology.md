@@ -68,10 +68,11 @@ Each stack runs the configuration the project documents or recommends, on its su
 | Logto | The client always receives refresh tokens | Otherwise refresh tokens need a consent prompt at every login |
 | Hydra, Kanidm, Pocket ID | `https://bench.invalid/callback` as the redirect URI | They reject plain-HTTP redirect URIs |
 
-Two variants make a default's cost visible instead of hiding it:
+Four variants make a default's cost visible instead of hiding it:
 
 - `authelia` uses a hashed client secret (pbkdf2-sha512), as Authelia's documentation recommends.
 - `authelia-plaintext-secret` uses a plaintext secret, which Authelia still supports but has deprecated. A hashed secret costs one hash on every client authentication, introspection included.
+- `authelia-light-hash` and `authelia-plaintext-light-hash` hash user passwords with argon2id at 7 MiB, t=5, p=1 (OWASP's low-memory setting, and Keycloak's default) instead of Authelia's 64 MiB, t=3, p=4. Authelia runs every login's hash at once, so with the default each login in progress needs 64 MiB, and 16 at once exhaust a 1 GiB budget.
 
 Hostnames are `<provider>.bench.test` inside each stack's Docker network, with one self-signed certificate. Every provider terminates TLS itself; none sits behind a proxy.
 

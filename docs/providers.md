@@ -25,6 +25,7 @@ What each stack does, and what is worth knowing about the provider before readin
 - The stack uses the users file and SQLite. Authelia + LLDAP is a separate stack.
 - The token endpoint allows 30 requests a minute per client IP by default (introspection and userinfo have no default limit). An application backend makes all of its users' token calls from one IP, so the stack raises the token and revocation limits.
 - The documentation recommends a hashed client secret (pbkdf2-sha512, 310,000 rounds). Every client authentication then costs one hash, at the introspection endpoint as well as the token endpoint. `profiles/authelia-plaintext-secret.env` uses a plaintext secret for comparison.
+- User passwords are hashed with argon2id at 64 MiB, t=3, p=4, the documented default, and every login's hash runs at once, so each login in progress needs 64 MiB. `profiles/authelia-light-hash.env` and `profiles/authelia-plaintext-light-hash.env` use 7 MiB, t=5, p=1 instead.
 - Expired OAuth2 sessions are never deleted, and tokens are looked up by an unindexed column, so introspection slows down as the table grows. See [authelia/authelia#13038](https://github.com/authelia/authelia/issues/13038). `scripts/authelia-cleanup.sh` deletes old rows on a schedule as a stopgap.
 - First-factor responses are padded to a moving average (about 300 ms once warm) to resist timing attacks. That time is a sleep, not CPU.
 - Requesting `offline_access`, which refresh tokens need, asks for consent at every login, even with pre-configured consent.
