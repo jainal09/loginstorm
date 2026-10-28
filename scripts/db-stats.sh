@@ -7,7 +7,7 @@
 # touch is not charged to the service being measured.
 set -uo pipefail
 OUT="${1:?out csv}"; INTERVAL="${2:?interval}"; MODE="${3:?mode}"; shift 3
-IMAGE="${SQLITE_IMAGE:-authbench/sqlite:1}"
+IMAGE="${SQLITE_IMAGE:-loginstorm/sqlite:1}"
 [ -f "$OUT" ] || echo 'epoch,db_bytes,rows' > "$OUT"
 while true; do
   case "$MODE" in

@@ -69,7 +69,7 @@ TAGS = '''query($owner: String!, $name: String!, $after: String) {
   rateLimit { cost }
 }'''
 HEADERS = {'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28',
-           'User-Agent': 'authbench-maintainer-health'}
+           'User-Agent': 'loginstorm-maintainer-health'}
 calls = Counter()
 
 

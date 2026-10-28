@@ -23,12 +23,12 @@ K6_IMAGE="${K6_IMAGE:-grafana/k6:2.3.0}"
 OUT="${OUT:-results/$(date -u +%Y%m%dT%H%M%SZ)}"
 profiles=("$@")
 [ ${#profiles[@]} -gt 0 ] || profiles=(profiles/*.env)
-export COMPOSE_PROJECT_NAME=authbench BENCH_NAME=bench
+export COMPOSE_PROJECT_NAME=loginstorm BENCH_NAME=bench
 IDP_CONTAINER=bench-idp
 k6_cpus=(); [ -z "${K6_CPUSET:-}" ] || k6_cpus=(--cpuset-cpus "$K6_CPUSET")
 
 scripts/gen-secrets.sh
-docker image inspect authbench/sqlite:1 >/dev/null 2>&1 || docker build -q -t authbench/sqlite:1 tools/sqlite >/dev/null
+docker image inspect loginstorm/sqlite:1 >/dev/null 2>&1 || docker build -q -t loginstorm/sqlite:1 tools/sqlite >/dev/null
 mkdir -p "$OUT"
 echo 'profile,level_var,level,start_epoch,end_epoch,k6_exit' > "$OUT/runs.csv"
 level_name="$(echo "$LEVEL_VAR" | tr 'A-Z' 'a-z')"

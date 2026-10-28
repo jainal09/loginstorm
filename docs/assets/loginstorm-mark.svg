@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="loginstorm">
+  <title>loginstorm</title>
+  <g transform="translate(0 0) scale(1)">
+    <defs>
+      <linearGradient id="m-night" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#4F46E5"/><stop offset="1" stop-color="#1E1B4B"/>
+      </linearGradient>
+      <linearGradient id="m-bolt" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFE27A"/><stop offset="1" stop-color="#FFB020"/>
+      </linearGradient>
+    </defs>
+    <rect width="64" height="64" rx="15" fill="url(#m-night)"/>
+    <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="14.25" fill="none" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.5"/>
+    <mask id="m-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <circle cx="32" cy="24" r="11.5" fill="#fff"/>
+      <path d="M26.6 30 L37.4 30 L42 53 L22 53 Z" fill="#fff" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M32.8333 14.2 L24.5 32.5 L32 32.5 L31.1667 44.7 L39.5 26.4 L32 26.4 Z" fill="#000" stroke="#000" stroke-width="0.6" stroke-linejoin="round"/>
+    </mask>
+    <rect width="64" height="64" fill="url(#m-bolt)" mask="url(#m-cut)"/>
+  </g>
+</svg>

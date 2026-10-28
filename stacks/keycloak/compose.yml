@@ -3,7 +3,7 @@
 x-bench: &bench
   restart: ${BENCH_RESTART:-no}  # no restart by default: an OOM kill should end the run, not hide behind a restart
   cgroup_parent: ${BENCH_SLICE:-}  # the stack's shared CPU and memory budget, when the runner sets one
-name: authbench
+name: loginstorm
 services:
   db:
     <<: *bench
@@ -25,7 +25,7 @@ services:
 
   idp:
     <<: *bench
-    image: ${BENCH_KC_IMAGE:-authbench/keycloak-optimized:26.8.1}
+    image: ${BENCH_KC_IMAGE:-loginstorm/keycloak-optimized:26.8.1}
     container_name: ${BENCH_NAME:-bench}-idp
     command: ${BENCH_KC_COMMAND:-start --optimized --import-realm}
     env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]

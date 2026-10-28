@@ -3,7 +3,7 @@
 # time, memory in use without reclaimable page cache (what docker stats reports), and OOM kills so far.
 # Usage: collect-cgroup.sh <slice> <out.csv>
 set -uo pipefail
-dir="/sys/fs/cgroup/authbench.slice/${1:?slice}"; OUT="${2:?out csv}"
+dir="/sys/fs/cgroup/loginstorm.slice/${1:?slice}"; OUT="${2:?out csv}"
 [ -f "$OUT" ] || echo 'epoch,cpu_usec,mem_bytes,anon_bytes,file_bytes,oom_kills,pids' > "$OUT"
 while true; do
   # The folder only exists while one of the stack's containers runs.

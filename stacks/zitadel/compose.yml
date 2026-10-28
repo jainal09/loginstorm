@@ -2,7 +2,7 @@
 x-bench: &bench
   restart: ${BENCH_RESTART:-no}
   cgroup_parent: ${BENCH_SLICE:-}
-name: authbench
+name: loginstorm
 services:
   db:
     <<: *bench

@@ -34,7 +34,7 @@ OUT="${OUT:-results/soak-$(date -u +%Y%m%dT%H%M%SZ)}"
 k6_cpus=""; [ -z "${K6_CPUSET:-}" ] || k6_cpus="--cpuset-cpus=$K6_CPUSET"
 
 scripts/gen-secrets.sh
-docker image inspect authbench/sqlite:1 >/dev/null 2>&1 || docker build -q -t authbench/sqlite:1 tools/sqlite >/dev/null
+docker image inspect loginstorm/sqlite:1 >/dev/null 2>&1 || docker build -q -t loginstorm/sqlite:1 tools/sqlite >/dev/null
 mkdir -p "$OUT"
 if [ -n "$RESUME" ]; then
   echo "resumed $(date -u +%FT%TZ) until $(date -u -d "@$END_EPOCH" +%FT%TZ)" >> "$OUT/soak.log"
@@ -76,7 +76,7 @@ for profile in "$@"; do
   if [ -n "${STACK_CPUS:-}" ] && [ -n "${STACK_MEM:-}" ]; then
     # Changing a running stack's budget would skew its results, so a resumed run keeps the one it has.
     if [ -z "$RESUME" ]; then BENCH_SLICE="$(scripts/envelope.sh "soak-$name" "$STACK_CPUS" "$STACK_MEM" "${STACK_CPUSET:-}")"
-    else BENCH_SLICE="authbench-soak_${name//-/_}.slice"; fi
+    else BENCH_SLICE="loginstorm-soak_${name//-/_}.slice"; fi
   fi
 
   if [ -z "$RESUME" ]; then
@@ -141,7 +141,7 @@ for profile in "$@"; do
     # The load loop for this stack, in its own process group. k6 containers carry a label, so ones left
     # running by an interrupted run are removed instead of doubling the load.
     stop_groups "$dir/load.pid"
-    docker ps -q --filter "label=authbench.k6=$idp" | xargs -r docker rm -f >/dev/null
+    docker ps -q --filter "label=loginstorm.k6=$idp" | xargs -r docker rm -f >/dev/null
     setsid bash -c '
       dir=$1; net=$2; idp=$3; next=$4; end=$5; chunk=$6; image=$7; root=$8; cpus=$9; shift 9; env_list=("$@")
       # k6 sees the repository at /bench, so its summary paths stay relative.
@@ -155,11 +155,11 @@ for profile in "$@"; do
           [ "$(docker inspect -f "{{.State.Running}}" "$idp" 2>/dev/null)" = true ] || { echo "$(date -u +%FT%TZ) $idp not running; stopping" >> "$abs/load.log"; break; }
         fi
         echo "$(date -u +%FT%TZ) chunk $h start" >> "$abs/load.log"
-        docker run --rm --label "authbench.k6=$idp" --user "$(id -u):$(id -g)" --network "$net" -v "$root:/bench" -w /bench "${k6_args[@]}" \
+        docker run --rm --label "loginstorm.k6=$idp" --user "$(id -u):$(id -g)" --network "$net" -v "$root:/bench" -w /bench "${k6_args[@]}" \
           -e INSECURE_TLS=true -e SCENARIO=api -e API_CALL='"$API_CALL"' -e VUS='"$API_VUS"' -e RATE='"$API_RATE"' \
           -e DURATION="$chunk" -e SUMMARY_FILE="$dir/api-$h.json" "$image" run -q bench.js > "$abs/api-$h.txt" 2>&1 &
         api=$!
-        docker run --rm --label "authbench.k6=$idp" --user "$(id -u):$(id -g)" --network "$net" -v "$root:/bench" -w /bench "${k6_args[@]}" \
+        docker run --rm --label "loginstorm.k6=$idp" --user "$(id -u):$(id -g)" --network "$net" -v "$root:/bench" -w /bench "${k6_args[@]}" \
           -e INSECURE_TLS=true -e SCENARIO=session -e VUS='"$LOGIN_VUS"' -e THINK_S=60 -e REFRESHES=2 -e LOGOUT=false \
           -e CHECKS_THRESHOLD="rate>0" -e DURATION="$chunk" -e SUMMARY_FILE="$dir/logins-$h.json" "$image" run -q bench.js > "$abs/logins-$h.txt" 2>&1 &
         logins=$!

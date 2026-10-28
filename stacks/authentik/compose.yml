@@ -24,7 +24,7 @@ x-authentik: &authentik
   depends_on:
     db:
       condition: service_healthy
-name: authbench
+name: loginstorm
 services:
   db:
     <<: *bench

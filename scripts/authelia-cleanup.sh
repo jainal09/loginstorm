@@ -12,7 +12,7 @@ VOLUME="${1:?docker volume holding db.sqlite3}"
 LOG="${2:?log csv}"
 INTERVAL="${3:-3600}"
 RETENTION_MIN="${4:-180}"
-IMAGE="${SQLITE_IMAGE:-authbench/sqlite:1}"
+IMAGE="${SQLITE_IMAGE:-loginstorm/sqlite:1}"
 [[ "$INTERVAL" =~ ^[0-9]+$ && "$RETENTION_MIN" =~ ^[0-9]+$ ]] || { echo "interval and retention must be whole numbers" >&2; exit 2; }
 CUTOFF="${CUTOFF:-strftime('%Y-%m-%d %H:%M:%S', 'now', '-$RETENTION_MIN minutes')}"
 

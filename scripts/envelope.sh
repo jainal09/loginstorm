@@ -6,7 +6,7 @@
 set -euo pipefail
 NAME="${1:?name}"; CPUS="${2:?cpus}"; MEM="${3:?memory}"; CPUSET="${4:-}"
 # A dash in a slice name means nesting (a-b.slice lives inside a.slice), so other dashes become underscores.
-slice="authbench-${NAME//-/_}.slice"
+slice="loginstorm-${NAME//-/_}.slice"
 props=("CPUQuota=$(awk -v c="$CPUS" 'BEGIN { printf "%d", c * 100 }')%" "MemoryMax=$MEM" MemorySwapMax=0)
 [ -z "$CPUSET" ] || props+=("AllowedCPUs=$CPUSET")
 # Drop what an earlier run set, such as a cpuset this run doesn't want. The new budget is kept across

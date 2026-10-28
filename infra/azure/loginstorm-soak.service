@@ -1,19 +1,19 @@
 # Resumes a soak (scripts/soak.sh) after the VM reboots, for example for host maintenance.
-# Install once:  sudo cp infra/azure/authbench-soak.service /etc/systemd/system/ && sudo systemctl enable authbench-soak
+# Install once:  sudo cp infra/azure/loginstorm-soak.service /etc/systemd/system/ && sudo systemctl enable loginstorm-soak
 # Then start the soak by hand and write results/soak-resume.env with the same settings:
 #   END_AT=...  OUT=results/<run>  STACK_CPUS=...  STACK_MEM=...  STACK_CPUSET=...  K6_CPUSET=...
 #   PROFILES="profiles/a.env profiles/b.env ..."   (same order as the first start)
 # Delete that file when the soak is over, and the service does nothing at the next boot.
 [Unit]
-Description=Resume the authbench soak after a reboot
+Description=Resume the loginstorm soak after a reboot
 Requires=docker.service
 After=docker.service network-online.target
-ConditionPathExists=/home/bench/authbench/results/soak-resume.env
+ConditionPathExists=/home/bench/loginstorm/results/soak-resume.env
 
 [Service]
 User=bench
-WorkingDirectory=/home/bench/authbench
-EnvironmentFile=/home/bench/authbench/results/soak-resume.env
+WorkingDirectory=/home/bench/loginstorm
+EnvironmentFile=/home/bench/loginstorm/results/soak-resume.env
 ExecStart=/bin/bash -c 'exec env RESUME=1 scripts/soak.sh $PROFILES'
 
 [Install]

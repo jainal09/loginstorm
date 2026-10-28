@@ -7,7 +7,7 @@ x-limits: &limits
   deploy:
     resources:
       limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
-name: authbench
+name: loginstorm
 services:
   db:
     <<: *bench
