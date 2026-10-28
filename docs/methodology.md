@@ -100,7 +100,7 @@ Hostnames are `<provider>.bench.test` inside each stack's Docker network, with o
 
 `scripts/soak.sh` runs providers side by side for days, each in its own stack and budget:
 
-- **Load per stack:** 10 introspections a second over 25 sessions, plus 2 users logging in about every 3 minutes, refreshing twice and never logging out. Their sessions pile up the way real users' do.
+- **Load per stack:** 10 introspections a second over 25 sessions, plus 2 users logging in about every 2.5 minutes, refreshing twice with 50 s pauses and never logging out. Their sessions pile up the way real users' do.
 - **Chunks:** k6 runs in hourly chunks, so latency can be compared hour by hour.
 - **Restarts:** the containers restart after a crash, as production ones would, and every crash and OOM kill is logged.
 - **Summary:** `scripts/soak-summary.py` compares the first six hours with the last six. It covers latency, whole-stack memory (with a trend fitted over the second half, so warm-up doesn't read as growth) and database size, and counts crashes.

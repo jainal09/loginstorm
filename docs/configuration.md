@@ -102,6 +102,7 @@ Covered in [Soak testing](soak-testing.md).
 | `CHUNK` | `1h` | Length of each k6 run |
 | `API_CALL`, `API_RATE`, `API_VUS` | `introspect`, `10`, `25` | Token checks per stack |
 | `LOGIN_VUS` | `2` | Users cycling through logins per stack |
+| `LOGIN_THINK_S` | `50` | Seconds between a login session's steps; kept under the common 60 s keep-alive timeout |
 | `DB_STATS_EVERY` | `3600` | Seconds between database samples |
 | `STACK_CPUS`, `STACK_MEM`, `STACK_CPUSET`, `K6_CPUSET` | none | As for the matrix |
 | `RESUME`, `OUT` | empty | Continue an interrupted run in `OUT` |

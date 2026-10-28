@@ -25,6 +25,9 @@ API_RATE="${API_RATE:-10}"      # introspections per second, per stack
 API_VUS="${API_VUS:-25}"        # open sessions, per stack
 API_CALL="${API_CALL:-introspect}"
 LOGIN_VUS="${LOGIN_VUS:-2}"     # users cycling through logins, per stack
+# Pause between a session's steps. Kept under 60 s: servers that close idle keep-alive connections at
+# 60 s would otherwise race with the next request on the same connection (an EOF, not a refusal).
+LOGIN_THINK_S="${LOGIN_THINK_S:-50}"
 DB_STATS_EVERY="${DB_STATS_EVERY:-3600}"
 K6_IMAGE="${K6_IMAGE:-grafana/k6:2.3.0}"
 RESUME="${RESUME:-}"
@@ -39,7 +42,7 @@ mkdir -p "$OUT"
 if [ -n "$RESUME" ]; then
   echo "resumed $(date -u +%FT%TZ) until $(date -u -d "@$END_EPOCH" +%FT%TZ)" >> "$OUT/soak.log"
 else
-  echo "started $(date -u +%FT%TZ) until $(date -u -d "@$END_EPOCH" +%FT%TZ) chunk=$CHUNK api_call=$API_CALL api_rate=$API_RATE api_vus=$API_VUS login_vus=$LOGIN_VUS stack_cpus=${STACK_CPUS:-} stack_mem=${STACK_MEM:-}" > "$OUT/soak.log"
+  echo "started $(date -u +%FT%TZ) until $(date -u -d "@$END_EPOCH" +%FT%TZ) chunk=$CHUNK api_call=$API_CALL api_rate=$API_RATE api_vus=$API_VUS login_vus=$LOGIN_VUS login_think_s=$LOGIN_THINK_S stack_cpus=${STACK_CPUS:-} stack_mem=${STACK_MEM:-}" > "$OUT/soak.log"
 fi
 
 profile_value() { grep -E "^$2=" "$1" | head -1 | cut -d= -f2-; }
@@ -160,7 +163,7 @@ for profile in "$@"; do
           -e DURATION="$chunk" -e SUMMARY_FILE="$dir/api-$h.json" "$image" run -q bench.js > "$abs/api-$h.txt" 2>&1 &
         api=$!
         docker run --rm --label "loginstorm.k6=$idp" --user "$(id -u):$(id -g)" --network "$net" -v "$root:/bench" -w /bench "${k6_args[@]}" \
-          -e INSECURE_TLS=true -e SCENARIO=session -e VUS='"$LOGIN_VUS"' -e THINK_S=60 -e REFRESHES=2 -e LOGOUT=false \
+          -e INSECURE_TLS=true -e SCENARIO=session -e VUS='"$LOGIN_VUS"' -e THINK_S='"$LOGIN_THINK_S"' -e REFRESHES=2 -e LOGOUT=false \
           -e CHECKS_THRESHOLD="rate>0" -e DURATION="$chunk" -e SUMMARY_FILE="$dir/logins-$h.json" "$image" run -q bench.js > "$abs/logins-$h.txt" 2>&1 &
         logins=$!
         wait $api $logins
