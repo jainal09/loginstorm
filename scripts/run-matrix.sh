@@ -142,7 +142,9 @@ except Exception as e:
     meta = {'inspect_error': str(e)}
 try:
     rows = list(csv.DictReader(open(f'{d}/stats-stack.csv')))
-    meta['stack_oom_kills'] = int(rows[-1]['oom_kills']) if rows else None
+    # The slice outlives the run, so its counter includes earlier runs. The first sample is taken
+    # before compose up, which makes it this run's baseline.
+    meta['stack_oom_kills'] = int(rows[-1]['oom_kills']) - int(rows[0]['oom_kills']) if rows else None
 except OSError:
     pass
 meta.update(stack=stack, startup_s=float(startup), ready=ready == 'true', provisioned=provisioned == 'true',
