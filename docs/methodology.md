@@ -97,6 +97,17 @@ Hostnames are `<provider>.bench.test` inside each stack's Docker network, with o
 - `scripts/summarize.py` reports, for every level, the rate actually achieved and the p95 latency. A provider's best is the highest achieved rate at a level where at least 99% of checks passed.
 - Achieved rates include every check. A rate reached with failing checks doesn't count.
 
+Stacks that reach 1,600 calls/s are run again on a fresh stack at 1,600, 3,200, 6,400 and 12,800 calls/s over 200 sessions, so their own limit shows instead of the suite's top rate:
+
+```sh
+OUT=results/high-rate/2cpu-2G/introspect STACK_CPUS=2 STACK_MEM=2G STACK_CPUSET=4-7 K6_CPUSET=0-3 \
+  LEVEL_VAR=RATE LEVELS="1600 3200 6400 12800" DURATION=45s \
+  BENCH_ENV="SCENARIO=api API_CALL=introspect VUS=200" scripts/run-matrix.sh profiles/rauthy.env
+```
+
+- The 1,600 level warms the fresh stack (a JVM is still compiling its hot paths), so published results take 1,600 from the suite and only the higher rates from this pass.
+- The load generator's cores are sampled every second. A rate counts as the provider's limit only while they stay under 90% busy; in the published runs they stayed under 50%.
+
 ## The soak
 
 `scripts/soak.sh` runs providers side by side for days, each in its own stack and budget:
