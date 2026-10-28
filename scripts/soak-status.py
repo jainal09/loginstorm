@@ -54,7 +54,9 @@ def main(run):
         print(f"{d.name}: {container('soak-' + d.name + '-idp')}")
         print(f"  chunks done {len(done)}; last: {log[-1] if log else '-'}")
         print(f"  worst checks in the last 12 summaries: {'-' if worst is None else f'{100 * worst:.2f}%'}")
-        print(f"  memory now: {mem[2] if len(mem) > 2 else '-'}; database: {last_line(d / 'db.csv') or '-'}")
+        stack = last_line(d / 'stats-stack.csv').split(',')
+        stack_mem = f'; whole stack {int(stack[2]) / 2**20:.0f} MiB, {stack[5]} OOM kills' if len(stack) > 5 else ''
+        print(f"  memory now: {mem[2] if len(mem) > 2 else '-'}{stack_mem}; database: {last_line(d / 'db.csv') or '-'}")
         if (d / 'cleanup.csv').exists():
             print(f"  last cleanup: {last_line(d / 'cleanup.csv') or 'none yet'}")
 
