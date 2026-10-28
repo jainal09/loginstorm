@@ -1,0 +1,51 @@
+# Authelia with LLDAP as its user directory (SQLite for both); no other database.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  db:
+    <<: *bench
+    # Named <stack>-db so the runners collect its stats next to the IdP's.
+    image: ghcr.io/lldap/lldap:v0.6.3-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    env_file: [./lldap.env, ./secrets/lldap.env]
+    healthcheck:
+      test: ["CMD", "/app/lldap", "healthcheck"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - lldap-data:/data
+    ports: ["127.0.0.1:${BENCH_PORT3:-17170}:17170"]  # admin API, used by provision.py
+    networks:
+      default:
+        aliases: [lldap]
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  idp:
+    <<: *bench
+    image: ${BENCH_AUTHELIA_IMAGE:-authelia/authelia:4.39.28}
+    container_name: ${BENCH_NAME:-bench}-idp
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    environment:
+      X_AUTHELIA_CONFIG_FILTERS: template
+    volumes:
+      - ./configuration.yml:/config/configuration.yml:ro
+      - ./secrets:/secrets:ro
+      - ../../tls:/certs:ro
+      - authelia-lldap-data:/data
+    networks:
+      default:
+        aliases: [auth.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:9091"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  lldap-data:
+  authelia-lldap-data:

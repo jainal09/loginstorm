@@ -1,0 +1,25 @@
+# Rauthy with its embedded Hiqlite (SQLite) database; no external DB.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  idp:
+    <<: *bench
+    image: ${BENCH_RAUTHY_IMAGE:-ghcr.io/sebadob/rauthy:0.37.2}
+    container_name: ${BENCH_NAME:-bench}-idp
+    env_file: [./secrets/secrets.env, "${PROFILE_FILE:?set PROFILE_FILE}"]
+    volumes:
+      - ./config.toml:/app/config.toml:ro
+      - ../../tls/cert.pem:/app/tls/tls.crt:ro
+      - ../../tls/key.pem:/app/tls/tls.key:ro
+      - rauthy-data:/app/data
+    networks:
+      default:
+        aliases: [rauthy.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:8443"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+volumes:
+  rauthy-data:

@@ -1,0 +1,62 @@
+# authentik (server + worker, one image) with the Postgres it requires; no Redis since 2025.10.
+# Laid out like authentik's own compose file, minus the Docker socket (outposts) and custom templates.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+x-authentik: &authentik
+  image: ${BENCH_AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server:2026.8.5}
+  env_file: [./secrets/secrets.env, "${PROFILE_FILE:?set PROFILE_FILE}"]
+  environment:
+    AUTHENTIK_POSTGRESQL__HOST: db
+    AUTHENTIK_POSTGRESQL__NAME: authentik
+    AUTHENTIK_POSTGRESQL__USER: authentik
+    AUTHENTIK_POSTGRESQL__PASSWORD: authentik
+    AUTHENTIK_BOOTSTRAP_EMAIL: admin@bench.test
+    AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+    AUTHENTIK_DISABLE_UPDATE_CHECK: "true"
+    AUTHENTIK_DISABLE_STARTUP_ANALYTICS: "true"
+  shm_size: 512mb
+  volumes:
+    - authentik-data:/data
+  deploy:
+    resources:
+      limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+  depends_on:
+    db:
+      condition: service_healthy
+name: authbench
+services:
+  db:
+    <<: *bench
+    image: postgres:17-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    environment:
+      POSTGRES_DB: authentik
+      POSTGRES_USER: authentik
+      POSTGRES_PASSWORD: authentik
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authentik"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - authentik-db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  idp:
+    <<: [*bench, *authentik]
+    container_name: ${BENCH_NAME:-bench}-idp
+    command: server
+    networks:
+      default:
+        aliases: [authentik.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:9443"]
+
+  worker:
+    <<: [*bench, *authentik]
+    container_name: ${BENCH_NAME:-bench}-worker
+    command: worker
+volumes:
+  authentik-db:
+  authentik-data:

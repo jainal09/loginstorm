@@ -1,0 +1,50 @@
+# Logto (one Node.js container: OIDC core on 3001, admin console on 3002) with the Postgres it requires.
+# Seeds its database on first start the way Logto's own compose file does.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  db:
+    <<: *bench
+    image: postgres:17-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - logto-db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  idp:
+    <<: *bench
+    image: ${BENCH_LOGTO_IMAGE:-svhd/logto:1.45.0}
+    container_name: ${BENCH_NAME:-bench}-idp
+    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    environment:
+      DB_URL: postgres://postgres:postgres@db:5432/logto
+      ENDPOINT: https://logto.bench.test:3001
+      ADMIN_ENDPOINT: https://logto.bench.test:3002
+      HTTPS_CERT_PATH: /certs/cert.pem
+      HTTPS_KEY_PATH: /certs/key.pem
+    volumes:
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [logto.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:3001"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  logto-db:

@@ -1,0 +1,16 @@
+#cloud-config
+# Benchmark host on Ubuntu 24.04: Docker Engine from Docker's own repository plus the tools the scripts use.
+# Container logs rotate at 4 x 500 MB, so a week of per-request logging can't fill the disk.
+package_update: true
+packages: [ca-certificates, curl, jq, python3, rsync, sqlite3]
+write_files:
+  - path: /etc/docker/daemon.json
+    content: |
+      {"log-driver": "json-file", "log-opts": {"max-size": "500m", "max-file": "4"}}
+runcmd:
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable" > /etc/apt/sources.list.d/docker.list
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  - usermod -aG docker bench

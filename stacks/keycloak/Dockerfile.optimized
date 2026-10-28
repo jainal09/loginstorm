@@ -1,0 +1,6 @@
+# Keycloak with its build step done ahead of time, so `start --optimized` skips
+# the boot-time augmentation that makes stock startups slow on small CPUs.
+ARG KC_VERSION=26.8.1
+FROM quay.io/keycloak/keycloak:${KC_VERSION}
+ENV KC_DB=postgres KC_HEALTH_ENABLED=true KC_METRICS_ENABLED=true
+RUN /opt/keycloak/bin/kc.sh build

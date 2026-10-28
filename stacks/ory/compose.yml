@@ -1,0 +1,105 @@
+# Ory's open-source stack: Hydra (OAuth2/OIDC) + Kratos (identities, logins) + Ory's reference login
+# and consent UI (Node.js), all on one Postgres. Migrations run as one-shot jobs first.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+x-limits: &limits
+  deploy:
+    resources:
+      limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+name: authbench
+services:
+  db:
+    <<: *bench
+    image: postgres:17-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    environment:
+      POSTGRES_USER: ory
+      POSTGRES_PASSWORD: ory
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ory"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+      - ory-db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  hydra-migrate:
+    <<: [*bench, *limits]
+    restart: "no"  # a one-shot job, even when the stack has a restart policy
+    image: ${BENCH_HYDRA_IMAGE:-oryd/hydra:v26.2.0}
+    container_name: ${BENCH_NAME:-bench}-hydra-migrate
+    command: migrate sql up -e --yes
+    environment:
+      DSN: postgres://ory:ory@db:5432/hydra?sslmode=disable
+    depends_on:
+      db: {condition: service_healthy}
+
+  kratos-migrate:
+    <<: [*bench, *limits]
+    restart: "no"
+    image: ${BENCH_KRATOS_IMAGE:-oryd/kratos:v26.2.0}
+    container_name: ${BENCH_NAME:-bench}-kratos-migrate
+    command: migrate sql up -e --yes
+    environment:
+      DSN: postgres://ory:ory@db:5432/kratos?sslmode=disable
+    depends_on:
+      db: {condition: service_healthy}
+
+  idp:
+    <<: [*bench, *limits]
+    image: ${BENCH_HYDRA_IMAGE:-oryd/hydra:v26.2.0}
+    container_name: ${BENCH_NAME:-bench}-idp
+    command: serve all --config /etc/hydra/hydra.yml
+    env_file: [./secrets/hydra.env, "${PROFILE_FILE:?set PROFILE_FILE}"]
+    volumes:
+      - ./hydra.yml:/etc/hydra/hydra.yml:ro
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [hydra.bench.test, hydra]
+    ports:
+      - "127.0.0.1:${BENCH_PORT:-18443}:4444"
+      - "127.0.0.1:${BENCH_PORT2:-19000}:4445"
+    depends_on:
+      hydra-migrate: {condition: service_completed_successfully}
+
+  kratos:
+    <<: [*bench, *limits]
+    image: ${BENCH_KRATOS_IMAGE:-oryd/kratos:v26.2.0}
+    container_name: ${BENCH_NAME:-bench}-kratos
+    command: serve --config /etc/kratos/kratos.yml
+    env_file: [./secrets/kratos.env, "${PROFILE_FILE:?set PROFILE_FILE}"]
+    volumes:
+      - ./kratos.yml:/etc/kratos/kratos.yml:ro
+      - ./identity.schema.json:/etc/kratos/identity.schema.json:ro
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [kratos.bench.test, kratos]
+    ports: ["127.0.0.1:${BENCH_PORT3:-17170}:4434"]
+    depends_on:
+      kratos-migrate: {condition: service_completed_successfully}
+
+  ui:
+    <<: [*bench, *limits]
+    image: ${BENCH_ORY_UI_IMAGE:-oryd/kratos-selfservice-ui-node:v26.2.0}
+    container_name: ${BENCH_NAME:-bench}-ui
+    env_file: [./secrets/ui.env]
+    environment:
+      PORT: "4455"
+      KRATOS_PUBLIC_URL: https://kratos.bench.test:4433/
+      HYDRA_ADMIN_URL: http://hydra:4445
+      TLS_CERT_PATH: /certs/cert.pem
+      TLS_KEY_PATH: /certs/key.pem
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"  # Kratos serves the bench's self-signed certificate
+    volumes:
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [login.bench.test]
+volumes:
+  ory-db:

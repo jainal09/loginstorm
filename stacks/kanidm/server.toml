@@ -1,0 +1,8 @@
+# Kanidm for the bench: TLS (Kanidm only serves HTTPS), its embedded database, defaults otherwise.
+version = "2"
+bindaddress = "0.0.0.0:8443"
+db_path = "/data/kanidm.db"
+tls_chain = "/certs/cert.pem"
+tls_key = "/certs/key.pem"
+domain = "kanidm.bench.test"
+origin = "https://kanidm.bench.test:8443"

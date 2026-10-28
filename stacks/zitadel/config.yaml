@@ -1,0 +1,32 @@
+# Zitadel for the bench (test-only values).
+Port: 8443
+ExternalDomain: zitadel.bench.test
+ExternalPort: 8443
+ExternalSecure: true
+TLS:
+  Enabled: true
+  KeyPath: /certs/key.pem
+  CertPath: /certs/cert.pem
+Database:
+  postgres:
+    Host: db
+    Port: 5432
+    Database: zitadel
+    User:
+      Username: zitadel
+      Password: zitadel
+      SSL:
+        Mode: disable
+    Admin:
+      Username: postgres
+      Password: postgres
+      SSL:
+        Mode: disable
+DefaultInstance:
+  Features:
+    # Built-in login UI; Login V2 is a separate Node.js container.
+    LoginV2:
+      Required: false
+  LoginPolicy:
+    # Don't interrupt every login with the "set up 2FA" prompt.
+    MfaInitSkipLifetime: 0s

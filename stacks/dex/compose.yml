@@ -1,0 +1,47 @@
+# Dex with Postgres storage, serving TLS itself.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  db:
+    <<: *bench
+    image: postgres:17-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    environment:
+      POSTGRES_DB: dex
+      POSTGRES_USER: dex
+      POSTGRES_PASSWORD: dex
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dex"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - dex-db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  idp:
+    <<: *bench
+    image: ${BENCH_DEX_IMAGE:-ghcr.io/dexidp/dex:v2.46.1}
+    container_name: ${BENCH_NAME:-bench}-idp
+    command: ["dex", "serve", "/etc/dex/config.yaml"]
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    volumes:
+      - ./config.yaml:/etc/dex/config.yaml:ro
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [dex.bench.test]
+    ports:
+      - "127.0.0.1:${BENCH_PORT:-18443}:5556"
+      - "127.0.0.1:${BENCH_PORT2:-19000}:5558"
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  dex-db:

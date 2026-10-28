@@ -1,0 +1,46 @@
+# Zitadel + the Postgres it requires, using the built-in (V1) login UI.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  db:
+    <<: *bench
+    image: postgres:17-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - zitadel-db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  idp:
+    <<: *bench
+    image: ${BENCH_ZITADEL_IMAGE:-ghcr.io/zitadel/zitadel:v4.20.0}
+    container_name: ${BENCH_NAME:-bench}-idp
+    command: start-from-init --masterkeyFile /secrets/masterkey.txt --tlsMode enabled --config /config/config.yaml --steps /config/steps.yaml
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    volumes:
+      - ./config.yaml:/config/config.yaml:ro
+      - ./steps.yaml:/config/steps.yaml:ro
+      - ./secrets/masterkey.txt:/secrets/masterkey.txt:ro
+      - ../../tls:/certs:ro
+      - ./pat/${BENCH_NAME:-bench}:/pat  # the bootstrap admin token lands here
+    networks:
+      default:
+        aliases: [zitadel.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:8443"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  zitadel-db:

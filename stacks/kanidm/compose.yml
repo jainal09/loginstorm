@@ -1,0 +1,24 @@
+# Kanidm: one Rust binary with its embedded database.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  idp:
+    <<: *bench
+    image: ${BENCH_KANIDM_IMAGE:-kanidm/server:1.11.2}
+    container_name: ${BENCH_NAME:-bench}-idp
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    volumes:
+      - kanidm-data:/data
+      - ./server.toml:/data/server.toml:ro
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [kanidm.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:8443"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+volumes:
+  kanidm-data:

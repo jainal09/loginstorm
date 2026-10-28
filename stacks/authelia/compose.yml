@@ -1,0 +1,28 @@
+# Authelia with SQLite storage and in-memory sessions; no external DB.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  idp:
+    <<: *bench
+    image: ${BENCH_AUTHELIA_IMAGE:-authelia/authelia:4.39.28}
+    container_name: ${BENCH_NAME:-bench}-idp
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    environment:
+      X_AUTHELIA_CONFIG_FILTERS: template  # fills the {{ secret ... }} lines from secrets/
+    volumes:
+      - ./${BENCH_AUTHELIA_CONFIG:-configuration}.yml:/config/configuration.yml:ro
+      - ./users-${BENCH_AUTHELIA_USERS:-default}.yml:/config/users.yml:ro
+      - ./secrets:/secrets:ro
+      - ../../tls:/certs:ro
+      - authelia-data:/data
+    networks:
+      default:
+        aliases: [auth.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:9091"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+volumes:
+  authelia-data:

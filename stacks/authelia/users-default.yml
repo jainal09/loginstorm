@@ -1,0 +1,252 @@
+# Generated test users (password: bench-password). Same hash for every user is fine for load tests.
+users:
+  bench-user-01:
+    displayname: 'Bench User01'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-01@bench.test'
+    groups: [users]
+  bench-user-02:
+    displayname: 'Bench User02'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-02@bench.test'
+    groups: [users]
+  bench-user-03:
+    displayname: 'Bench User03'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-03@bench.test'
+    groups: [users]
+  bench-user-04:
+    displayname: 'Bench User04'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-04@bench.test'
+    groups: [users]
+  bench-user-05:
+    displayname: 'Bench User05'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-05@bench.test'
+    groups: [users]
+  bench-user-06:
+    displayname: 'Bench User06'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-06@bench.test'
+    groups: [users]
+  bench-user-07:
+    displayname: 'Bench User07'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-07@bench.test'
+    groups: [users]
+  bench-user-08:
+    displayname: 'Bench User08'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-08@bench.test'
+    groups: [users]
+  bench-user-09:
+    displayname: 'Bench User09'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-09@bench.test'
+    groups: [users]
+  bench-user-10:
+    displayname: 'Bench User10'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-10@bench.test'
+    groups: [users]
+  bench-user-11:
+    displayname: 'Bench User11'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-11@bench.test'
+    groups: [users]
+  bench-user-12:
+    displayname: 'Bench User12'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-12@bench.test'
+    groups: [users]
+  bench-user-13:
+    displayname: 'Bench User13'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-13@bench.test'
+    groups: [users]
+  bench-user-14:
+    displayname: 'Bench User14'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-14@bench.test'
+    groups: [users]
+  bench-user-15:
+    displayname: 'Bench User15'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-15@bench.test'
+    groups: [users]
+  bench-user-16:
+    displayname: 'Bench User16'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-16@bench.test'
+    groups: [users]
+  bench-user-17:
+    displayname: 'Bench User17'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-17@bench.test'
+    groups: [users]
+  bench-user-18:
+    displayname: 'Bench User18'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-18@bench.test'
+    groups: [users]
+  bench-user-19:
+    displayname: 'Bench User19'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-19@bench.test'
+    groups: [users]
+  bench-user-20:
+    displayname: 'Bench User20'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-20@bench.test'
+    groups: [users]
+  bench-user-21:
+    displayname: 'Bench User21'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-21@bench.test'
+    groups: [users]
+  bench-user-22:
+    displayname: 'Bench User22'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-22@bench.test'
+    groups: [users]
+  bench-user-23:
+    displayname: 'Bench User23'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-23@bench.test'
+    groups: [users]
+  bench-user-24:
+    displayname: 'Bench User24'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-24@bench.test'
+    groups: [users]
+  bench-user-25:
+    displayname: 'Bench User25'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-25@bench.test'
+    groups: [users]
+  bench-user-26:
+    displayname: 'Bench User26'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-26@bench.test'
+    groups: [users]
+  bench-user-27:
+    displayname: 'Bench User27'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-27@bench.test'
+    groups: [users]
+  bench-user-28:
+    displayname: 'Bench User28'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-28@bench.test'
+    groups: [users]
+  bench-user-29:
+    displayname: 'Bench User29'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-29@bench.test'
+    groups: [users]
+  bench-user-30:
+    displayname: 'Bench User30'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-30@bench.test'
+    groups: [users]
+  bench-user-31:
+    displayname: 'Bench User31'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-31@bench.test'
+    groups: [users]
+  bench-user-32:
+    displayname: 'Bench User32'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-32@bench.test'
+    groups: [users]
+  bench-user-33:
+    displayname: 'Bench User33'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-33@bench.test'
+    groups: [users]
+  bench-user-34:
+    displayname: 'Bench User34'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-34@bench.test'
+    groups: [users]
+  bench-user-35:
+    displayname: 'Bench User35'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-35@bench.test'
+    groups: [users]
+  bench-user-36:
+    displayname: 'Bench User36'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-36@bench.test'
+    groups: [users]
+  bench-user-37:
+    displayname: 'Bench User37'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-37@bench.test'
+    groups: [users]
+  bench-user-38:
+    displayname: 'Bench User38'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-38@bench.test'
+    groups: [users]
+  bench-user-39:
+    displayname: 'Bench User39'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-39@bench.test'
+    groups: [users]
+  bench-user-40:
+    displayname: 'Bench User40'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-40@bench.test'
+    groups: [users]
+  bench-user-41:
+    displayname: 'Bench User41'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-41@bench.test'
+    groups: [users]
+  bench-user-42:
+    displayname: 'Bench User42'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-42@bench.test'
+    groups: [users]
+  bench-user-43:
+    displayname: 'Bench User43'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-43@bench.test'
+    groups: [users]
+  bench-user-44:
+    displayname: 'Bench User44'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-44@bench.test'
+    groups: [users]
+  bench-user-45:
+    displayname: 'Bench User45'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-45@bench.test'
+    groups: [users]
+  bench-user-46:
+    displayname: 'Bench User46'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-46@bench.test'
+    groups: [users]
+  bench-user-47:
+    displayname: 'Bench User47'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-47@bench.test'
+    groups: [users]
+  bench-user-48:
+    displayname: 'Bench User48'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-48@bench.test'
+    groups: [users]
+  bench-user-49:
+    displayname: 'Bench User49'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-49@bench.test'
+    groups: [users]
+  bench-user-50:
+    displayname: 'Bench User50'
+    password: '$argon2id$v=19$m=65536,t=3,p=4$vbd+zAoz+9OfxqdIhmuYqw$ucaCzRrcKmOh6hvSVWBQ8dmkDg2L9IQ2lGHRR+CveBo'
+    email: 'bench-user-50@bench.test'
+    groups: [users]

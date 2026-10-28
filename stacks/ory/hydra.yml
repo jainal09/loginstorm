@@ -1,0 +1,17 @@
+# Ory Hydra for the bench: Postgres, TLS on the public API (the admin API stays inside the stack's
+# network, as Ory recommends), the reference login UI for login and consent. Defaults otherwise.
+dsn: postgres://ory:ory@db:5432/hydra?sslmode=disable
+serve:
+  public:
+    # Hydra serves plain HTTP unless TLS is enabled explicitly (Kratos' schema has no such key).
+    tls:
+      enabled: true
+      cert: {path: /certs/cert.pem}
+      key: {path: /certs/key.pem}
+urls:
+  self:
+    issuer: https://hydra.bench.test:4444
+  login: https://login.bench.test:4455/login
+  consent: https://login.bench.test:4455/consent
+  logout: https://login.bench.test:4455/logout
+  error: https://login.bench.test:4455/error

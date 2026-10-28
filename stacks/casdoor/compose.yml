@@ -1,0 +1,45 @@
+# Casdoor (one Go binary with its web UI) with Postgres, serving TLS itself; bench data from init_data.json.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  db:
+    <<: *bench
+    image: postgres:17-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    environment:
+      POSTGRES_DB: casdoor
+      POSTGRES_USER: casdoor
+      POSTGRES_PASSWORD: casdoor
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U casdoor"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - casdoor-db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  idp:
+    <<: *bench
+    image: ${BENCH_CASDOOR_IMAGE:-casbin/casdoor:v4.24.0}
+    container_name: ${BENCH_NAME:-bench}-idp
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    volumes:
+      - ./app.conf:/conf/app.conf:ro
+      - ./secrets/init_data.json:/conf/init_data.json:ro
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [casdoor.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:8443"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  casdoor-db:

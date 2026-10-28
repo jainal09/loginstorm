@@ -1,0 +1,63 @@
+# Keycloak + the Postgres it requires.
+# The runners set the BENCH_* variables (names, host ports, budget); the defaults work for a single stack by hand.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}  # no restart by default: an OOM kill should end the run, not hide behind a restart
+  cgroup_parent: ${BENCH_SLICE:-}  # the stack's shared CPU and memory budget, when the runner sets one
+name: authbench
+services:
+  db:
+    <<: *bench
+    image: postgres:17-alpine
+    container_name: ${BENCH_NAME:-bench}-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 2s
+      retries: 30
+    volumes:
+      - keycloak-db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits: {cpus: "${STACK_CPUS:-0}", memory: "${STACK_MEM:-0}"}
+
+  idp:
+    <<: *bench
+    image: ${BENCH_KC_IMAGE:-authbench/keycloak-optimized:26.8.1}
+    container_name: ${BENCH_NAME:-bench}-idp
+    command: ${BENCH_KC_COMMAND:-start --optimized --import-realm}
+    env_file: ["${PROFILE_FILE:?set PROFILE_FILE}"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_HTTPS_CERTIFICATE_FILE: /certs/cert.pem
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /certs/key.pem
+      KC_HOSTNAME: https://keycloak.bench.test:8443
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      - ./${BENCH_KC_REALM:-realm}:/opt/keycloak/data/import:ro
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [keycloak.bench.test]
+    ports:
+      - "127.0.0.1:${BENCH_PORT:-18443}:8443"
+      - "127.0.0.1:${BENCH_PORT2:-19000}:9000"
+    deploy:
+      resources:
+        # A profile's LIMIT_* caps the IdP alone; otherwise every container sees the whole stack budget,
+        # the way it would see a VM of that size (the JVM sizes its heap from it).
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+        reservations: {cpus: "${RES_CPUS:-0}", memory: "${RES_MEM:-0}"}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  keycloak-db:

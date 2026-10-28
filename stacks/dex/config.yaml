@@ -1,0 +1,79 @@
+# Dex for the bench (test-only values): Postgres storage, TLS, its local password database with
+# 50 static users, and the approval screen skipped (the app is first-party).
+issuer: https://dex.bench.test:5556/dex
+storage:
+  type: postgres
+  config:
+    host: db
+    port: 5432
+    database: dex
+    user: dex
+    password: dex
+    ssl:
+      mode: disable
+web:
+  https: 0.0.0.0:5556
+  tlsCert: /certs/cert.pem
+  tlsKey: /certs/key.pem
+telemetry:
+  http: 0.0.0.0:5558
+oauth2:
+  skipApprovalScreen: true
+staticClients:
+  - id: bench-client
+    name: Bench
+    secret: bench-secret
+    redirectURIs: ['http://bench.invalid/callback']
+enablePasswordDB: true
+# Password: bench-password (bcrypt cost 10, as `htpasswd -bnBC 10` in Dex's docs). One hash for all is fine for a load test.
+staticPasswords:
+  - {email: bench-user-01@bench.test, username: bench-user-01, userID: bench-user-01, hash: &hash "$2y$10$zqP7IvvPyQCoa1/MHF99h.Rx2OLh0pnxBWjRp6SvD6lj/B7EPFcnK"}
+  - {email: bench-user-02@bench.test, username: bench-user-02, userID: bench-user-02, hash: *hash}
+  - {email: bench-user-03@bench.test, username: bench-user-03, userID: bench-user-03, hash: *hash}
+  - {email: bench-user-04@bench.test, username: bench-user-04, userID: bench-user-04, hash: *hash}
+  - {email: bench-user-05@bench.test, username: bench-user-05, userID: bench-user-05, hash: *hash}
+  - {email: bench-user-06@bench.test, username: bench-user-06, userID: bench-user-06, hash: *hash}
+  - {email: bench-user-07@bench.test, username: bench-user-07, userID: bench-user-07, hash: *hash}
+  - {email: bench-user-08@bench.test, username: bench-user-08, userID: bench-user-08, hash: *hash}
+  - {email: bench-user-09@bench.test, username: bench-user-09, userID: bench-user-09, hash: *hash}
+  - {email: bench-user-10@bench.test, username: bench-user-10, userID: bench-user-10, hash: *hash}
+  - {email: bench-user-11@bench.test, username: bench-user-11, userID: bench-user-11, hash: *hash}
+  - {email: bench-user-12@bench.test, username: bench-user-12, userID: bench-user-12, hash: *hash}
+  - {email: bench-user-13@bench.test, username: bench-user-13, userID: bench-user-13, hash: *hash}
+  - {email: bench-user-14@bench.test, username: bench-user-14, userID: bench-user-14, hash: *hash}
+  - {email: bench-user-15@bench.test, username: bench-user-15, userID: bench-user-15, hash: *hash}
+  - {email: bench-user-16@bench.test, username: bench-user-16, userID: bench-user-16, hash: *hash}
+  - {email: bench-user-17@bench.test, username: bench-user-17, userID: bench-user-17, hash: *hash}
+  - {email: bench-user-18@bench.test, username: bench-user-18, userID: bench-user-18, hash: *hash}
+  - {email: bench-user-19@bench.test, username: bench-user-19, userID: bench-user-19, hash: *hash}
+  - {email: bench-user-20@bench.test, username: bench-user-20, userID: bench-user-20, hash: *hash}
+  - {email: bench-user-21@bench.test, username: bench-user-21, userID: bench-user-21, hash: *hash}
+  - {email: bench-user-22@bench.test, username: bench-user-22, userID: bench-user-22, hash: *hash}
+  - {email: bench-user-23@bench.test, username: bench-user-23, userID: bench-user-23, hash: *hash}
+  - {email: bench-user-24@bench.test, username: bench-user-24, userID: bench-user-24, hash: *hash}
+  - {email: bench-user-25@bench.test, username: bench-user-25, userID: bench-user-25, hash: *hash}
+  - {email: bench-user-26@bench.test, username: bench-user-26, userID: bench-user-26, hash: *hash}
+  - {email: bench-user-27@bench.test, username: bench-user-27, userID: bench-user-27, hash: *hash}
+  - {email: bench-user-28@bench.test, username: bench-user-28, userID: bench-user-28, hash: *hash}
+  - {email: bench-user-29@bench.test, username: bench-user-29, userID: bench-user-29, hash: *hash}
+  - {email: bench-user-30@bench.test, username: bench-user-30, userID: bench-user-30, hash: *hash}
+  - {email: bench-user-31@bench.test, username: bench-user-31, userID: bench-user-31, hash: *hash}
+  - {email: bench-user-32@bench.test, username: bench-user-32, userID: bench-user-32, hash: *hash}
+  - {email: bench-user-33@bench.test, username: bench-user-33, userID: bench-user-33, hash: *hash}
+  - {email: bench-user-34@bench.test, username: bench-user-34, userID: bench-user-34, hash: *hash}
+  - {email: bench-user-35@bench.test, username: bench-user-35, userID: bench-user-35, hash: *hash}
+  - {email: bench-user-36@bench.test, username: bench-user-36, userID: bench-user-36, hash: *hash}
+  - {email: bench-user-37@bench.test, username: bench-user-37, userID: bench-user-37, hash: *hash}
+  - {email: bench-user-38@bench.test, username: bench-user-38, userID: bench-user-38, hash: *hash}
+  - {email: bench-user-39@bench.test, username: bench-user-39, userID: bench-user-39, hash: *hash}
+  - {email: bench-user-40@bench.test, username: bench-user-40, userID: bench-user-40, hash: *hash}
+  - {email: bench-user-41@bench.test, username: bench-user-41, userID: bench-user-41, hash: *hash}
+  - {email: bench-user-42@bench.test, username: bench-user-42, userID: bench-user-42, hash: *hash}
+  - {email: bench-user-43@bench.test, username: bench-user-43, userID: bench-user-43, hash: *hash}
+  - {email: bench-user-44@bench.test, username: bench-user-44, userID: bench-user-44, hash: *hash}
+  - {email: bench-user-45@bench.test, username: bench-user-45, userID: bench-user-45, hash: *hash}
+  - {email: bench-user-46@bench.test, username: bench-user-46, userID: bench-user-46, hash: *hash}
+  - {email: bench-user-47@bench.test, username: bench-user-47, userID: bench-user-47, hash: *hash}
+  - {email: bench-user-48@bench.test, username: bench-user-48, userID: bench-user-48, hash: *hash}
+  - {email: bench-user-49@bench.test, username: bench-user-49, userID: bench-user-49, hash: *hash}
+  - {email: bench-user-50@bench.test, username: bench-user-50, userID: bench-user-50, hash: *hash}

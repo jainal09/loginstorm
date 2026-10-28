@@ -1,0 +1,29 @@
+# Pocket ID: one Go binary with its web UI and embedded SQLite, serving TLS itself. Passkey logins only.
+x-bench: &bench
+  restart: ${BENCH_RESTART:-no}
+  cgroup_parent: ${BENCH_SLICE:-}
+name: authbench
+services:
+  idp:
+    <<: *bench
+    image: ${BENCH_POCKETID_IMAGE:-ghcr.io/pocket-id/pocket-id:v2.19.1}
+    container_name: ${BENCH_NAME:-bench}-idp
+    env_file: [./secrets/secrets.env, "${PROFILE_FILE:?set PROFILE_FILE}"]
+    environment:
+      APP_URL: https://pocketid.bench.test:1411
+      TLS_CERT_FILE: /certs/cert.pem
+      TLS_KEY_FILE: /certs/key.pem
+      ANALYTICS_DISABLED: "true"
+      VERSION_CHECK_DISABLED: "true"
+    volumes:
+      - pocketid-data:/app/data
+      - ../../tls:/certs:ro
+    networks:
+      default:
+        aliases: [pocketid.bench.test]
+    ports: ["127.0.0.1:${BENCH_PORT:-18443}:1411"]
+    deploy:
+      resources:
+        limits: {cpus: "${LIMIT_CPUS:-${STACK_CPUS:-0}}", memory: "${LIMIT_MEM:-${STACK_MEM:-0}}"}
+volumes:
+  pocketid-data:

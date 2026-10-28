@@ -1,0 +1,16 @@
+FirstInstance:
+  InstanceName: bench
+  DefaultLanguage: en
+  PatPath: /pat/admin.pat
+  Org:
+    Name: bench
+    Human:
+      UserName: zitadel-admin
+      Password: Bench-Admin-Password-1!
+      PasswordChangeRequired: false
+    Machine:
+      Machine:
+        Username: bench-admin
+        Name: Bench Admin
+      Pat:
+        ExpirationDate: '2099-01-01T00:00:00Z'
