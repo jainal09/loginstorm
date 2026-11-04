@@ -29,7 +29,7 @@ Only the login itself differs between providers, so each has a small adapter tha
 | Introspection | `POST` introspection endpoint | `idp_introspect` |
 | Logout | revocation, or Keycloak's back-channel logout; skipped where neither exists | `idp_logout` |
 
-Every k6 check (credentials accepted, code exchanged, token active, and so on) counts toward a pass rate. A run fails when fewer than 99% pass, unless a scenario says otherwise.
+Every k6 check (credentials accepted, code exchanged, introspect ok, token active, and so on) counts toward a pass rate. A run fails when fewer than 99% pass, unless a scenario says otherwise.
 
 ### Scenarios
 

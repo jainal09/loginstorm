@@ -573,7 +573,10 @@ function introspect(oidc, accessToken) {
   const body = basic ? { token: accessToken } : withClient({ token: accessToken });
   const res = timed('introspect', http.post(INTROSPECT_URL || oidc.introspection_endpoint, body,
     { ...params, tags: { name: 'introspect' } }));
-  check(res, { 'token active': r => r.status === 200 && r.json('active') === true });
+  // Separate checks, so an HTTP error is not reported as an inactive token.
+  if (check(res, { 'introspect ok': r => r.status === 200 })) {
+    check(res, { 'token active': r => r.json('active') === true });
+  }
 }
 
 // Keycloak ends the session with a back-channel logout; the others revoke the refresh token.
