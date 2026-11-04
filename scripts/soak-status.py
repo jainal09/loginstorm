@@ -46,7 +46,8 @@ def main(run):
         log = (d / 'load.log').read_text().splitlines() if (d / 'load.log').exists() else []
         done = [line for line in log if line.endswith(' done')]
         worst = None
-        for f in sorted(d.glob('*-[0-9][0-9][0-9].json'))[-12:]:
+        # Order by chunk number, not name, so the newest api-* and logins-* chunks both count.
+        for f in sorted(d.glob('*-[0-9][0-9][0-9].json'), key=lambda p: (p.stem[-3:], p.name))[-12:]:
             rate = json.loads(f.read_text())['metrics'].get('checks', {}).get('values', {}).get('rate')
             if rate is not None:
                 worst = rate if worst is None else min(worst, rate)

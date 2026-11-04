@@ -81,6 +81,11 @@ def events(run):
     return out
 
 
+def stopped(evs, e, grace=30):
+    """A non-zero exit soon after a docker kill is a requested stop (Keycloak exits 143 on SIGTERM), not a crash."""
+    return any(k['action'] == 'kill' and 0 <= int(e['time'] or 0) - int(k['time'] or 0) <= grace for k in evs)
+
+
 def fmt(v, digits=0, unit=''):
     return '-' if v is None else f'{v:,.{digits}f}{unit}'
 
@@ -95,7 +100,8 @@ def main(run):
         memory = hourly_memory(d / 'stats-stack.csv')
         db = list(csv.DictReader((d / 'db.csv').open())) if (d / 'db.csv').exists() else []
         crashes = [e for name, evs in by_container.items() if name.startswith(f'soak-{d.name}-')
-                   for e in evs if e['action'] in ('die', 'oom') and e['exit_code'] not in (None, '0')]
+                   for e in evs if e['action'] in ('die', 'oom') and e['exit_code'] not in (None, '0')
+                   and not stopped(evs, e)]
         ooms = [e for name, evs in by_container.items() if name.startswith(f'soak-{d.name}-')
                 for e in evs if e['action'] == 'oom']
         first_mem, last_mem = edges([m['mib'] for m in memory])

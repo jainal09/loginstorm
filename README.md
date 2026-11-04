@@ -63,6 +63,7 @@ Each run writes a folder under `results/` with a `report.md`, the raw k6 summari
 - [Methodology](docs/methodology.md): what is measured, budgets, defaults, and how results are summarized
 - [Configuration](docs/configuration.md): every variable of the k6 script and the runners, and the profile format
 - [Soak testing](docs/soak-testing.md): week-long runs, crash and reboot handling, health checks
+- [Soak results](docs/soak-results.md): seven days of eleven providers side by side
 - [Provider notes](docs/providers.md): behavior and defaults worth knowing for each provider
 - [Adding a provider](docs/adding-a-provider.md): the stack and adapter contract
 - [Feature comparison](docs/feature-comparison.md): protocols, MFA, security defaults and operations, with sources

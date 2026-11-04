@@ -33,7 +33,7 @@ For each stack, it prints:
 
 - whether the identity provider's container is running, with its OOM flag and restart count
 - the number of chunks done
-- the worst pass rate of the last twelve chunks
+- the worst pass rate of the newest twelve chunk summaries, six token-check and six login
 - current memory, for the container and the whole stack
 - the latest database sample
 
@@ -99,6 +99,8 @@ The volumes stay for inspection.
 python3 scripts/soak-summary.py results/soak-1
 ```
 
-The summary compares the first six hours with the last six for introspection p95, login p95, whole-stack memory and database size. It adds a memory trend in MiB per day, fitted over the second half of the run so warm-up doesn't count as growth, and lists every crash and OOM kill. `soak-summary.json` holds the hourly series for charts.
+The summary compares the first six hours with the last six for introspection p95, login p95, whole-stack memory and database size. It adds a memory trend in MiB per day, fitted over the second half of the run so warm-up doesn't count as growth, and lists every crash and OOM kill. A non-zero exit within 30 seconds of a stop request counts as a stop, not a crash. `soak-summary.json` holds the hourly series for charts.
+
+Results from the first week-long run are in [Soak results](soak-results.md).
 
 **Don't edit the scripts while a soak runs.** Bash reads a script as it executes it, so an edited file can break the running copy.
