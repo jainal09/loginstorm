@@ -35,7 +35,7 @@ Latency and memory compare the medians of the first six and the last six hourly 
   - Logto queries Postgres as a tenant role under row-level security. `jsonb_object_field_text` is not leakproof, so Postgres won't use the index on that expression, and each lookup scans every stored session. On the week-old database it read 10,938 sessions to keep one, in 5.7 ms. As a superuser, with no row-level security, the index is used.
   - Sessions last 14 days, so the scan grows with every login.
   - Side by side under the soak load, introspection p95 was 17.5 ms on the week-old copy and 11.3 ms on a fresh one.
-  - A shorter session lifetime (`PATCH /api/configs/oidc/session`) caps it. Code: [oidc-model-instance.ts](https://github.com/logto-io/logto/blob/v1.45.0/packages/core/src/queries/oidc-model-instance.ts#L74-L77), [_after_each.sql](https://github.com/logto-io/logto/blob/v1.45.0/packages/schemas/tables/_after_each.sql#L6-L10).
+  - A shorter session lifetime (`PATCH /api/configs/oidc/session`) caps it. Upstream already tracks the index problem in [logto#9886](https://github.com/logto-io/logto/issues/9886) and is moving the ID into its own indexed column. Code: [oidc-model-instance.ts](https://github.com/logto-io/logto/blob/v1.45.0/packages/core/src/queries/oidc-model-instance.ts#L74-L77), [_after_each.sql](https://github.com/logto-io/logto/blob/v1.45.0/packages/schemas/tables/_after_each.sql#L6-L10).
 - **Casdoor's database reached 2.3 GB.** Every POST API call, each token introspection included, is stored as an audit record, and records are kept forever by default. Casdoor v4.24.0 can expire them with `recordRetentionDays`.
 - **Kanidm's logins got 14 times slower (53 to 727 ms) while its token checks stayed flat.** Kanidm stores OAuth2 sessions inside the user's own entry, and an ended session is only marked revoked; it is removed after seven days.
   - The two login users built up about 4,000 sessions each, a 1.1 MB entry. Users that logged in once an hour held about 167.
@@ -53,7 +53,7 @@ Latency and memory compare the medians of the first six and the last six hourly 
   - The bench first reported these as inactive tokens. `bench.js` now checks `introspect ok` (HTTP 200) and `token active` separately.
 - **Kanidm's failed checks are token refreshes lost on the connection:** of 1,566, 1,262 were EOF, 278 connection resets and 26 "server closed idle connection", and none was an HTTP refusal. Kanidm closes connections after about 60 s idle, the same length as the soak's pause between steps, so k6 sometimes sent on a closed connection. Later soaks should pause for less than 60 s.
 - **Dex failed about 1% of login checks.** The first ones checked were Postgres serialization errors that Dex does not retry ([dex#1341](https://github.com/dexidp/dex/issues/1341)).
-- **Rauthy failed one login:** two code exchanges for the same user in the same millisecond collided on a primary key.
+- **Rauthy failed one login:** two logins for the same user in the same millisecond collided on the primary key of `user_login_states` ([rauthy#1865](https://github.com/sebadob/rauthy/issues/1865)).
 
 ## Notes on the numbers
 
