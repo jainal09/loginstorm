@@ -9,6 +9,9 @@ What each stack does, and what is worth knowing about the provider before readin
 - Appending `-XX:+UseSerialGC` stops the JVM from starting ("Multiple garbage collectors selected"), because the default `JAVA_OPTS` already selects G1. Replace `JAVA_OPTS` instead.
 - A client can only introspect tokens that list it in their audience, so the realm adds an audience mapper.
 - Brute-force detection is off by default. `profiles/small-host/keycloak-bruteforce.env` turns it on.
+- Replacing `JAVA_OPTS` drops Keycloak's own defaults with it: the metaspace cap, `-XX:+ExitOnOutOfMemoryError` and the TLS renegotiation guard. Without the exit flag, a Keycloak that runs out of heap keeps running half-broken instead of stopping, so a restart policy never brings it back. Repeat the default list and change only what you need.
+- A fixed heap that is too small for the build step fails at every stock start ("OutOfMemoryError: Java heap space" during augmentation); a pre-built image avoids the build at boot.
+- `profiles/small-host/keycloak-lean.env` runs Keycloak at 1 CPU and 640 MiB: the pre-built image, a fixed 256 MiB heap with Serial GC, a database pool of 2 to 6, 32 HTTP threads, caches of 100 entries, Keycloak's default JVM flags kept, and lockout, a password policy and refresh-token rotation on (`stacks/keycloak/realm-protected`).
 - Login uses its classic HTML form; the adapter posts it directly.
 
 ## authentik 2026.8.5

@@ -122,5 +122,5 @@ OUT=results/high-rate/2cpu-2G/introspect STACK_CPUS=2 STACK_MEM=2G STACK_CPUSET=
 - **One load generator, one source address.** Per-IP rate limits and lockouts behave differently from real traffic spread across many clients. Defaults that only affect per-IP behavior are noted in the table above.
 - **Single instances only.** Clustering, replicas and external caches are out of scope. So are external user directories, other than LLDAP for Authelia.
 - **Local JWT validation isn't measured.** An API that verifies signed access tokens itself never calls the provider. The api scenario measures the providers' own token-check endpoints, which opaque tokens and revocation checks depend on.
-- **Defaults are not tuned settings.** Every provider can be made faster or smaller. `profiles/small-host/` shows how far a few of them go on 0.5 CPU and 512 MiB.
+- **Defaults are not tuned settings.** Every provider can be made faster or smaller. `profiles/small-host/` shows how far a few of them go on 0.5 CPU and 512 MiB, and `keycloak-lean.env` there is a tuned Keycloak at 1 CPU and 640 MiB.
 - **Results are from one machine type** (published runs: Azure `Standard_D8as_v5`, AMD EPYC 7763, Ubuntu 24.04, Docker 29). Absolute numbers will differ elsewhere; the comparison between providers is the point.

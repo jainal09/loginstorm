@@ -22,6 +22,7 @@ docker run --rm -v "$PWD:/bench" -w /bench \
 | `SCOPE` | `openid`, plus `offline_access` where refresh tokens need it | |
 | `USERS_FILE` | empty | CSV with a `username,password` header |
 | `USER_PREFIX`, `USER_COUNT`, `USER_PASSWORD`, `USER_DOMAIN` | `bench-user-`, `25`, empty, empty | Without a users file: `bench-user-01` and up, one password. A domain turns the names into email addresses |
+| `USER_OFFSET` | `0` | The first user this run logs in. The soak runner starts its login users after the token-check sessions, so the two never sign in the same user at the same moment |
 | `PASSKEYS_FILE` | empty | One passkey per user, in user order, for passkey-only providers (see `stacks/pocket-id/enroll.js`) |
 | `INTROSPECT_URL` | from discovery | For providers that don't advertise one (Ory Hydra's is on its admin API) |
 | `SCENARIO` | `session` | `session`, `login`, `api`, `lockout` or `client-credentials` |

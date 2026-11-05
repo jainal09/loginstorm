@@ -163,7 +163,7 @@ for profile in "$@"; do
           -e DURATION="$chunk" -e SUMMARY_FILE="$dir/api-$h.json" "$image" run -q bench.js > "$abs/api-$h.txt" 2>&1 &
         api=$!
         docker run --rm --label "loginstorm.k6=$idp" --user "$(id -u):$(id -g)" --network "$net" -v "$root:/bench" -w /bench "${k6_args[@]}" \
-          -e INSECURE_TLS=true -e SCENARIO=session -e VUS='"$LOGIN_VUS"' -e THINK_S='"$LOGIN_THINK_S"' -e REFRESHES=2 -e LOGOUT=false \
+          -e INSECURE_TLS=true -e SCENARIO=session -e VUS='"$LOGIN_VUS"' -e USER_OFFSET='"$API_VUS"' -e THINK_S='"$LOGIN_THINK_S"' -e REFRESHES=2 -e LOGOUT=false \
           -e CHECKS_THRESHOLD="rate>0" -e DURATION="$chunk" -e SUMMARY_FILE="$dir/logins-$h.json" "$image" run -q bench.js > "$abs/logins-$h.txt" 2>&1 &
         logins=$!
         wait $api $logins

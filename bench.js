@@ -80,6 +80,9 @@ const users = new SharedArray('users', () => {
     username: `${prefix}${String(i + 1).padStart(2, '0')}${domain ? `@${domain}` : ''}`, password,
     passkey: passkeys ? passkeys[i] : null }));
 });
+// Load generators running side by side start at different users, so they never log one user in twice
+// at the same moment (with lockout on, some providers refuse the second login).
+const USER_OFFSET = Number(env('USER_OFFSET', 0));
 
 // login_submit is the request that checks the password; login_extra adds up the
 // provider's other hops (PoW challenge, consent, redirects).
@@ -138,7 +141,7 @@ export async function setup() {
   const sessions = [];
   for (let i = 0; SCENARIO === 'api' && i < VUS; i++) {
     loginJar = new http.CookieJar();
-    sessions.push({ tokens: await login(oidc, users[i % users.length]), issuedAt: Date.now() });
+    sessions.push({ tokens: await login(oidc, users[(USER_OFFSET + i) % users.length]), issuedAt: Date.now() });
     loginJar = null;
   }
   return { oidc, sessions };
@@ -591,7 +594,7 @@ function logout(oidc, refreshToken) {
   check(res, { 'logged out': r => r.status === 204 || r.status === 200 });
 }
 
-const pickUser = () => users[(__VU - 1) % users.length];
+const pickUser = () => users[(USER_OFFSET + __VU - 1) % users.length];
 
 // Login, use the session the way an app would, then end it.
 export async function session({ oidc }) {
